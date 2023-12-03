@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define time 10
-bool witness(int a, int n) // ¶ÔnÊÇ·ñÎªËØÊı½øĞĞÅĞ¶Ï£¬Ëæ»úÊıÎªa
+bool witness(int a, int n) // å¯¹næ˜¯å¦ä¸ºç´ æ•°è¿›è¡Œåˆ¤æ–­ï¼Œéšæœºæ•°ä¸ºa
 {
 	int y = 1, b = n - 1;
 	while (b)
@@ -11,7 +11,7 @@ bool witness(int a, int n) // ¶ÔnÊÇ·ñÎªËØÊı½øĞĞÅĞ¶Ï£¬Ëæ»úÊıÎªa
 			y = y * a % n;
 		}
 		int x = a;
-		a = a * a % n; // ÅĞ¶Ï x^2 mod n =1£¿
+		a = a * a % n; // åˆ¤æ–­ x^2 mod n =1ï¼Ÿ
 		if (a == 1 && x != 1 && x != n - 1)
 		{
 			return false;
@@ -27,22 +27,22 @@ bool witness(int a, int n) // ¶ÔnÊÇ·ñÎªËØÊı½øĞĞÅĞ¶Ï£¬Ëæ»úÊıÎªa
 int main()
 {
 	int n;
-	printf("ĞèÒª²âÊÔµÄ´óËØÊıÎª£º"); // ÅĞ¶Ï25409ÊÇ·ñÎªËØÊı
+	printf("éœ€è¦æµ‹è¯•çš„å¤§ç´ æ•°ä¸ºï¼š"); // åˆ¤æ–­25409æ˜¯å¦ä¸ºç´ æ•°
 	scanf("%d", &n);
 	printf("\n\n");
 
-	// Ëæ»úÊıaÈ¡Öµ
+	// éšæœºæ•°aå–å€¼
 	int a = 0;
 	int i;
 
 	for (i = 0; i < time; i++)
 	{
 		a = rand() % n;
-		printf("Ëæ»úÊıa=%d,", a);
+		printf("éšæœºæ•°a=%d,", a);
 		if (witness(a, n) == false)
-			printf("%dÊÇºÏÊı\n", n);
+			printf("%dæ˜¯åˆæ•°\n", n);
 		else
-			printf("%dÊÇËØÊı\n", n);
+			printf("%dæ˜¯ç´ æ•°\n", n);
 	}
 	return 0;
 }

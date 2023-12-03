@@ -3,7 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
-typedef unsigned int unit32;				//
+typedef unsigned int unit32;
 unit32 Powmod(unit32 a, unit32 t, unit32 n) // 快速指数算法计算以a为底的t次幂模n的值
 {
 	int temp, i;
@@ -91,30 +91,71 @@ unit32 Ex_Euclid(unit32 f, unit32 d) // 求d模f的逆元
 	return y2;
 }
 
+// unit32 Primitive_root(unit32 p)
+// {
+
+// }
 unit32 Primitive_root(unit32 p) // 求数p的本原根
 {
-	while (1)
+	// 线性筛选素数---------------------
+	bool isnp[p];		// 是否为素数
+	int prime[p] = {0}; // 素数表
+	int pNum = 0;		// 素数表下标
+	isnp[1] = true;
+	for (int i = 2; i < p; i++)
 	{
-		unit32 root = rand() % (p - 1) + 2;
-		for (int i = 2; i < p; i++)
+		if (!isnp[i])
+		{					   // 在isnp[i]==0时进入
+			isnp[i] = 1;	   // 是素数标记1
+			prime[pNum++] = i; // 是素数的话就保存到prime表里
+		}
+		for (int j = 0; j < pNum && i * prime[j] < p; j++)
 		{
-			if (Powmod(root, i, p) == 1 && i == p - 1)
+			isnp[i * prime[j]] = 1; // 把已登记质数的所有倍数，筛选掉，不再登记prime
+			if (i % prime[j] == 0)
+				break; // 避免重复筛选，比如6被2筛掉后，不会再被3筛掉
+		}
+	}
+	//------------------------------------
+	// 求p-1的质因子并判断是不是本原根
+	int elem[p] = {0}, elemNum = 0, K = p - 1;
+	for (int i = 0; i < pNum; i++) // 找出K=p-1能整除的素数
+	{
+
+		if (!(K % prime[i])) // 当prime[i]是k的因子时进入
+		{
+			elem[elemNum++] = prime[i];
+			K /= prime[i];
+		}
+		if (K == 1)
+			break;
+		if (K < prime[i])
+		{
+			// elem[elemNum++] = prime[i];
+			break;
+		}
+	}
+	int g = 0;
+	bool flag;
+	for (int i = 2; i < p; i++)
+	{
+		flag = true;
+		for (int j = 0; j < elemNum; j++)
+		{
+
+			if (Powmod(i, (p - 1) / elem[j], p) == 1) // 判断本原根
 			{
-				return root;
+				flag = false;
 				break;
 			}
 		}
+		if (flag)
+		{
+			g = i;
+			break;
+		}
 	}
-	// for (unit32 root = 2; root < p; root++)
-	// {
-	// 	for (int i = 2; i < p; i++)
-	// 	{
-	// 		if (Powmod(root, i, p) == 1 && i == p - 1)
-	// 		{
-	// 			return root;
-	// 		}
-	// 	}
-	// }
+	return g;
 }
 
 //**********************************Elgamal算法参数和加解密****************************//
@@ -130,7 +171,7 @@ void Elgamal_Byte_Encrypto(char *input, char *output, unit32 puk)
 	while (input[i] != '\0')
 	{
 		output[i] = (int)input[i];
-		s[i] = output[i] * Powmod(puk, k, p);
+		s[i] = output[i] * Powmod(puk, k, p) % p;
 		output[i] = (char)s[i];
 		i++;
 	}
@@ -141,11 +182,11 @@ void Elgamal_Byte_DEcrypto(char *input, char *output, unit32 prk)
 { // 输入：密文input，私钥prk
 	// 输出：解密后的明文output
 	int i = 0;
-	double R = pow(r, prk);
+	unit32 R = Powmod(r, prk, p);
 	while (input[i] != '\0')
 	{
 		output[i] = (int)input[i];
-		s[i] = output[i] * Ex_Euclid(p,R);
+		s[i] = output[i] * Ex_Euclid(p, R) % p;
 		output[i] = (char)s[i];
 		i++;
 	}

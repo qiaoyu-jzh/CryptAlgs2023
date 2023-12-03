@@ -1,15 +1,15 @@
-// ¿ìËÙÖ¸Êý
+// å¿«é€ŸæŒ‡æ•°
 #include <stdio.h>
-int FE(int a, int t, int n) // ·µ»ØÖµÎªaµÄt´Î·½Ä£nµÄÖµ
+int FE(int a, int t, int n) // è¿”å›žå€¼ä¸ºaçš„tæ¬¡æ–¹æ¨¡nçš„å€¼
 {
 	int x = 1;
 	while (t)
 	{
-		if (t & 1)
+		if (t & 1 == 1)
 		{
-			int x = x * a % n;
+			x = (x * a) % n;
 		}
-		x = x * x % n;
+		a = (a * a) % n;
 		t >>= 1;
 	}
 	return x;
@@ -18,12 +18,12 @@ int main()
 {
 	int a, t, n;
 
-	printf("Çó½âaµÄt´Î·½Ä£nµÄÖµ£º");
+	printf("æ±‚è§£açš„tæ¬¡æ–¹æ¨¡nçš„å€¼ï¼š");
 	scanf("%d,%d,%d", &a, &t, &n);
 	printf("\n\n");
 
 	int ans = 0;
 	ans = FE(a, t, n);
-	printf("%dµÄ%d´Î·½Ä£%dµÄÖµÎª£º%d", a, t, n, ans); // 66£¬77£¬119£¬½á¹ûÎª19
+	printf("%dçš„%dæ¬¡æ–¹æ¨¡%dçš„å€¼ä¸ºï¼š%d", a, t, n, ans); // 66ï¼Œ77ï¼Œ119ï¼Œç»“æžœä¸º19
 	return 0;
 }

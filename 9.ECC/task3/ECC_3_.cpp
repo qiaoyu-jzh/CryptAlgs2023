@@ -1,15 +1,15 @@
-/*	ÍÖÔ²ÇúÏß»ù±¾ÔËËãÊµÏÖ
-	¼ÆËãÂú×ãÌõ¼şµÄÍÖÔ²ÇúÏßÉÏµÄµã
-	·½³Ì£ºy2=x3+ax+b mod p£¬²ÎÊıa,b,p
+/*	æ¤­åœ†æ›²çº¿åŸºæœ¬è¿ç®—å®ç°
+	è®¡ç®—æ»¡è¶³æ¡ä»¶çš„æ¤­åœ†æ›²çº¿ä¸Šçš„ç‚¹
+	æ–¹ç¨‹ï¼šy2=x3+ax+b mod pï¼Œå‚æ•°a,b,p
 */
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include "func.h"
 
-int Point[100][2] = {0};  // È«¾Ö±äÁ¿£¬Âú×ãÌõ¼şµÄµãµÄ¼¯ºÏ
-int a = 1, b = 1, P = 23; // ÉèÖÃ³õÊ¼²ÎÊı
-int G[2] = {3, 10};		  // Éú³ÉÔªG
+int Point[100][2] = {0};  // å…¨å±€å˜é‡ï¼Œæ»¡è¶³æ¡ä»¶çš„ç‚¹çš„é›†åˆ
+int a = 1, b = 1, P = 23; // è®¾ç½®åˆå§‹å‚æ•°
+int G[2] = {3, 10};		  // ç”Ÿæˆå…ƒG
 
 void ECC_Add(int p[2], int q[2], int r[2])
 {
@@ -22,7 +22,7 @@ void ECC_Add(int p[2], int q[2], int r[2])
 	{
 		lamda = (3 * p[0] * p[0] + a) % P * Ex_Euclid(P, 2 * p[1]);
 	}
-	// ¼ÆËãÊä³örµÄxÖµºÍyÖµ
+	// è®¡ç®—è¾“å‡ºrçš„xå€¼å’Œyå€¼
 	r[0] = (lamda * lamda - p[0] - q[0]) % P;  // x
 	r[1] = (lamda * (p[0] - r[0]) - p[1]) % P; // y
 	if (r[1] < 0)
@@ -39,18 +39,18 @@ void ECC_Multi(int p[2], int n, int q[2])
 	}
 }
 
-void ECC_Encrypto(int m[2], int puk[2], int c[2][2]) // Ã÷ÎÄ¡¢¹«Ô¿¡¢ÃÜÎÄ
+void ECC_Encrypto(int m[2], int puk[2], int c[2][2]) // æ˜æ–‡ã€å…¬é’¥ã€å¯†æ–‡
 {
-	int k = 6; // ¼ÓÃÜËæ»úÊı
-	// ¼ÆËãÃÜÎÄ£¬c=(c1,c2)£¬c1=k*G,c2=M+k*puk£¬ÍÖÔ²ÇúÏßÉÏµÄ¼Ó·¨ºÍ³Ë·¨
+	int k = 6; // åŠ å¯†éšæœºæ•°
+	// è®¡ç®—å¯†æ–‡ï¼Œc=(c1,c2)ï¼Œc1=k*G,c2=M+k*pukï¼Œæ¤­åœ†æ›²çº¿ä¸Šçš„åŠ æ³•å’Œä¹˜æ³•
 	ECC_Multi(G, k, c[0]);//c1
 	ECC_Multi(puk, k, c[1]);//k*puk
 	ECC_Add(m, c[1], c[1]);//c2
 }
 
-void ECC_Decrypto(int c[2][2], int m[2], int d) // ÃÜÎÄ¡¢Ã÷ÎÄ¡¢Ë½Ô¿
+void ECC_Decrypto(int c[2][2], int m[2], int d) // å¯†æ–‡ã€æ˜æ–‡ã€ç§é’¥
 {
-	// ½âÃÜ£¬c=(c1,c2)£¬m=c2-d*c1£¬ÍÖÔ²ÇúÏßp(x,y)µÄ¼Ó·¨ÄæÔª-p=(x,-y)
+	// è§£å¯†ï¼Œc=(c1,c2)ï¼Œm=c2-d*c1ï¼Œæ¤­åœ†æ›²çº¿p(x,y)çš„åŠ æ³•é€†å…ƒ-p=(x,-y)
 	int temp[2] = {0};
 	ECC_Multi(c[0], d, temp);//d*c1
 	temp[1] = (P - temp[1]) % P;
@@ -59,19 +59,19 @@ void ECC_Decrypto(int c[2][2], int m[2], int d) // ÃÜÎÄ¡¢Ã÷ÎÄ¡¢Ë½Ô¿
 
 int main()
 {
-	int d = 7; // Ë½Ô¿
+	int d = 7; // ç§é’¥
 	int PA[2] = {0};
-	ECC_Multi(G, d, PA); // ¹«Ô¿PA=d*G
-	printf("\nÍÖÔ²ÇúÏß y^2=x^3+%dx+%d mod %d\n", a, b, P);
-	printf("Éú³ÉÔªG=(%d,%d),Ë½Ô¿d=%d,¹«Ô¿PA=(%d,%d)\n", G[0], G[1], d, PA[0], PA[1]);
+	ECC_Multi(G, d, PA); // å…¬é’¥PA=d*G
+	printf("\næ¤­åœ†æ›²çº¿ y^2=x^3+%dx+%d mod %d\n", a, b, P);
+	printf("ç”Ÿæˆå…ƒG=(%d,%d),ç§é’¥d=%d,å…¬é’¥PA=(%d,%d)\n", G[0], G[1], d, PA[0], PA[1]);
 	int M[2] = {1, 7};
 	int C[2][2] = {0};
-	printf("Ã÷ÎÄM=(%d,%d)\n", M[0], M[1]);
+	printf("æ˜æ–‡M=(%d,%d)\n", M[0], M[1]);
 	ECC_Encrypto(M, PA, C);
-	printf("ÃÜÎÄC=((%d,%d),(%d,%d))\n", C[0][0], C[0][1], C[1][0], C[1][1]);
+	printf("å¯†æ–‡C=((%d,%d),(%d,%d))\n", C[0][0], C[0][1], C[1][0], C[1][1]);
 	int temp_out[2] = {0};
 	ECC_Decrypto(C, temp_out, d);
-	printf("½âÃÜÔ­ÎÄM=(%d,%d)\n", temp_out[0], temp_out[1]);
+	printf("è§£å¯†åŸæ–‡M=(%d,%d)\n", temp_out[0], temp_out[1]);
 
 	return 0;
 }

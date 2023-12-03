@@ -1,13 +1,13 @@
-/*	ÍÖÔ²ÇúÏß»ù±¾ÔËËãÊµÏÖ
-	¼ÆËãÂú×ãÌõ¼şµÄÍÖÔ²ÇúÏßÉÏµÄµã
-	·½³Ì£ºy2=x3+ax+b mod p£¬²ÎÊıa,b,p
+/*	æ¤­åœ†æ›²çº¿åŸºæœ¬è¿ç®—å®ç°
+	è®¡ç®—æ»¡è¶³æ¡ä»¶çš„æ¤­åœ†æ›²çº¿ä¸Šçš„ç‚¹
+	æ–¹ç¨‹ï¼šy2=x3+ax+b mod pï¼Œå‚æ•°a,b,p
 */
 #include <stdio.h>
 #include <math.h>
 
-int Point[100][2] = {0}; // È«¾Ö±äÁ¿£¬Âú×ãÌõ¼şµÄµãµÄ¼¯ºÏ
+int Point[100][2] = {0}; // å…¨å±€å˜é‡ï¼Œæ»¡è¶³æ¡ä»¶çš„ç‚¹çš„é›†åˆ
 
-int Get_ECC_Point(int a, int b, int p, int (*point)[2]) // ¼ÆËã·ûºÏÌõ¼şµÄËùÓĞµã£¬´æÈëPointÖĞ£¬²¢·µ»ØµãµÄÊıÄ¿
+int Get_ECC_Point(int a, int b, int p, int (*point)[2]) // è®¡ç®—ç¬¦åˆæ¡ä»¶çš„æ‰€æœ‰ç‚¹ï¼Œå­˜å…¥Pointä¸­ï¼Œå¹¶è¿”å›ç‚¹çš„æ•°ç›®
 {
 	int flag = (4 * a * a * a + 27 * b * b) % p;
 	if (flag == 0)
@@ -33,10 +33,10 @@ int Get_ECC_Point(int a, int b, int p, int (*point)[2]) // ¼ÆËã·ûºÏÌõ¼şµÄËùÓĞµã£
 
 int main()
 {
-	// ÉèÖÃ³õÊ¼²ÎÊı
+	// è®¾ç½®åˆå§‹å‚æ•°
 	int a = 1, b = 1, p = 23;
 	int n = 0;
-	printf("\nÍÖÔ²ÇúÏß y^2=x^3+%dx+%d mod %dÉÏµÄµã£º\n", a, b, p);
+	printf("\næ¤­åœ†æ›²çº¿ y^2=x^3+%dx+%d mod %dä¸Šçš„ç‚¹ï¼š\n", a, b, p);
 	n = Get_ECC_Point(a, b, p, Point);
 	for (int i = 0; i < n; i++)
 	{

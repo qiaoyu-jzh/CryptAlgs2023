@@ -1,71 +1,138 @@
 #include <stdio.h>
 #define P 23
 #define Q 17
+typedef unsigned int unit32;
 
-int Eculid(int f,int d)//ÇóÕıÕûÊıf,dµÄ×î´ó¹«Òò×Ó 
+int Eculid(int f, int d) // æ±‚æ­£æ•´æ•°f,dçš„æœ€å¤§å…¬å› å­
 {
-	int x,y,r;
-	x=f;
-	y=d;
-	
-	int flag = 1;
-    while(flag)
+  int x, y, r;
+  x = f;
+  y = d;
+
+  int flag = 1;
+  while (flag)
+  {
+    if (y == 0)
     {
-      if(y==0)
+      flag = 0;
+      return x;
+    }
+    else
+    {
+      r = x % y;
+      x = y;
+      y = r;
+    }
+  }
+  return 0;
+}
+
+unit32 Ex_Euclid(unit32 f, unit32 d) // æ±‚dæ¨¡fçš„é€†å…ƒ
+{
+  int x1, x2, x3;
+  int y1, y2, y3;
+  int t1, t2, t3;
+  int q;
+
+  x1 = 1;
+  x2 = 0;
+  x3 = f;
+
+  y1 = 0;
+  y2 = 1;
+  y3 = d;
+
+  int flag = 1;
+  while (flag)
+  {
+    if (y3 == 1)
+    {
+      flag = 0;
+      if (y2 < 0)
       {
-      	flag=0;
-      	return x;
-	  }
-	  else
-	  {
-		  r=x%y;
-		  x=y;
-		  y=r; 
-	  }
-	}
-     return 0;
+        y2 = y2 + f; // è‹¥ä¸ºè´Ÿæ•°ï¼Œåˆ™åŠ få˜ä¸ºæ•´æ•°å³å¯
+      }
+    }
+    if (y3 > 1)
+    {
+      q = x3 / y3;
+
+      t1 = x1 - q * y1;
+      t2 = x2 - q * y2;
+      t3 = x3 - q * y3;
+
+      x1 = y1;
+      x2 = y2;
+      x3 = y3;
+
+      y1 = t1;
+      y2 = t2;
+      y3 = t3;
+    }
+  }
+  return y2;
 }
 
-//RSA¼ÓÃÜÔËËã 
-int enc(int m, int e, int n)//¹«¿ªµÄn£¬¹«Ô¿e£¬Ã÷ÎÄm£¬·µ»ØÖµÎªÃÜÎÄc 
+int FE(int a, int t, int n) // è¿”å›å€¼ä¸ºaçš„tæ¬¡æ–¹æ¨¡nçš„å€¼
 {
-	int c;
-	
-	return c;
+  int x = 1;
+  while (t)
+  {
+    if (t & 1 == 1)
+    {
+      x = x % n * a % n;
+    }
+    a = a % n * a % n;
+    t >>= 1;
+  }
+  return x;
 }
 
-//RSA½âÃÜÔËËã 
-int dec(int c, int d, int n)//ÃÜÎÄc£¬Ë½Ô¿d£¬·µ»ØÖµÃ÷ÎÄm 
+// RSAåŠ å¯†è¿ç®—
+int enc(int m, int e, int n) // å…¬å¼€çš„nï¼Œå…¬é’¥eï¼Œæ˜æ–‡mï¼Œè¿”å›å€¼ä¸ºå¯†æ–‡c
 {
-	int m;
+  int c;
+  c = FE(m, e, n);
+  return c;
+}
 
-	return m;
+// RSAè§£å¯†è¿ç®—
+int dec(int c, int d, int n) // å¯†æ–‡cï¼Œç§é’¥dï¼Œè¿”å›å€¼æ˜æ–‡m
+{
+  int m;
+  m = FE(c, d, n);
+  return m;
+}
+
+int key(int e, int n)
+{
+  return Ex_Euclid(n, e);
 }
 
 int main()
 {
-  //³õÊ¼»¯£¨ÏûÏ¢m=4,p=23,q=17,e=15£© 
-  int n,n1,e,m,d,c;
-  n=P*Q;
-  n1=(P-1)*(Q-1);
-  printf("n=pq=%d,n1=(p-1)(q-1)=%d",n,n1);
-  printf("\nÑ¡È¡¹«Ô¿e=");
-  scanf("%d",&e);
-  if(Eculid(n1,e)>1)
+  // åˆå§‹åŒ–ï¼ˆæ¶ˆæ¯m=4,p=23,q=17,e=15ï¼‰
+  int n, n1, e, m, d, c;
+  n = P * Q;
+  n1 = (P - 1) * (Q - 1);
+  printf("n=pq=%d,n1=(p-1)(q-1)=%d", n, n1);
+  printf("\né€‰å–å…¬é’¥e=");
+  scanf("%d", &e);
+  if (Eculid(n1, e) > 1)
   {
-    printf("¹«Ô¿eÓën1²»»¥ËØ£¬ÇëÖØĞÂÑ¡È¡¹«Ô¿e=");
-    scanf("%d",&e);
-  } 
-      
-  printf("ÀûÓÃRSAËã·¨¼Ó½âÃÜ£¬ÏûÏ¢m=");
-  scanf("%d",&m);
-  //Éú³ÉË½Ô¿
-  d=key(e,n1);
-  printf("\nÃÜÔ¿Éú³É£º¹«Ô¿e=%d, Ë½Ô¿d=%d\n",e,d);
-  //RSA¼ÓÃÜÔËËã
-  c=enc(m,e,n);
-  printf("¼ÓÃÜ¹ı³Ì£ºÈôÃ÷ÎÄm=%d, ÔòÃÜÎÄc=%d\n",m,c);
-  //RSA½âÃÜÔËËã
-  m=dec(c,d,n); 
-  printf("½âÃÜ¹ı³Ì£ºÈôÃÜÎÄc=%d, ÔòÃ÷ÎÄm=%d\n",c,m);
+    printf("å…¬é’¥eä¸n1ä¸äº’ç´ ï¼Œè¯·é‡æ–°é€‰å–å…¬é’¥e=");
+    scanf("%d", &e);
+  }
+
+  printf("åˆ©ç”¨RSAç®—æ³•åŠ è§£å¯†ï¼Œæ¶ˆæ¯m=");
+  scanf("%d", &m);
+  // ç”Ÿæˆç§é’¥
+  d = key(e, n1);
+  printf("\nå¯†é’¥ç”Ÿæˆï¼šå…¬é’¥e=%d, ç§é’¥d=%d\n", e, d);
+  // RSAåŠ å¯†è¿ç®—
+  c = enc(m, e, n);
+  printf("åŠ å¯†è¿‡ç¨‹ï¼šè‹¥æ˜æ–‡m=%d, åˆ™å¯†æ–‡c=%d\n", m, c);
+  // RSAè§£å¯†è¿ç®—
+  m = dec(c, d, n);
+  printf("è§£å¯†è¿‡ç¨‹ï¼šè‹¥å¯†æ–‡c=%d, åˆ™æ˜æ–‡m=%d\n", c, m);
 }

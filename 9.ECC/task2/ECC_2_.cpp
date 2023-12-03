@@ -1,16 +1,16 @@
-/*	ÍÖÔ²ÇúÏß»ù±¾ÔËËãÊµÏÖ
-	¼ÆËãÂú×ãÌõ¼şµÄÍÖÔ²ÇúÏßÉÏµÄµã
-	·½³Ì£ºy2=x3+ax+b mod p£¬²ÎÊıa,b,p
+/*	æ¤­åœ†æ›²çº¿åŸºæœ¬è¿ç®—å®ç°
+	è®¡ç®—æ»¡è¶³æ¡ä»¶çš„æ¤­åœ†æ›²çº¿ä¸Šçš„ç‚¹
+	æ–¹ç¨‹ï¼šy2=x3+ax+b mod pï¼Œå‚æ•°a,b,p
 */
 #include <stdio.h>
 #include <math.h>
 #include "func.h"
 
-int Point[100][2] = {0};  // È«¾Ö±äÁ¿£¬Âú×ãÌõ¼şµÄµãµÄ¼¯ºÏ
-int a = 1, b = 1, P = 23; // ÉèÖÃ³õÊ¼²ÎÊı
+int Point[100][2] = {0};  // å…¨å±€å˜é‡ï¼Œæ»¡è¶³æ¡ä»¶çš„ç‚¹çš„é›†åˆ
+int a = 1, b = 1, P = 23; // è®¾ç½®åˆå§‹å‚æ•°
 // unit32 Ex_Euclid(unit32 f, unit32 d);
 
-int Get_ECC_Point(int a, int b, int p, int (*point)[2]) // ¼ÆËã·ûºÏÌõ¼şµÄËùÓĞµã£¬´æÈëPointÖĞ£¬²¢·µ»ØµãµÄÊıÄ¿
+int Get_ECC_Point(int a, int b, int p, int (*point)[2]) // è®¡ç®—ç¬¦åˆæ¡ä»¶çš„æ‰€æœ‰ç‚¹ï¼Œå­˜å…¥Pointä¸­ï¼Œå¹¶è¿”å›ç‚¹çš„æ•°ç›®
 {
 	int flag = (4 * a * a * a + 27 * b * b) % p;
 	if (flag == 0)
@@ -36,7 +36,7 @@ int Get_ECC_Point(int a, int b, int p, int (*point)[2]) // ¼ÆËã·ûºÏÌõ¼şµÄËùÓĞµã£
 
 void ECC_Add(int p[2], int q[2], int r[2])
 {
-	// ÅĞ¶Ïp¡¢qÊÇ·ñÏàµÈp[0]==q[0]£¬·ÖÇé¿ö¼ÆËãlamda
+	// åˆ¤æ–­pã€qæ˜¯å¦ç›¸ç­‰p[0]==q[0]ï¼Œåˆ†æƒ…å†µè®¡ç®—lamda
 	int lamda = 0;
 	if (p[0] != q[0])
 	{
@@ -46,7 +46,7 @@ void ECC_Add(int p[2], int q[2], int r[2])
 	{
 		lamda = (3 * p[0] * p[0] + a) % P * Ex_Euclid(P, 2 * p[1]);
 	}
-	// ¼ÆËãÊä³örµÄxÖµºÍyÖµ
+	// è®¡ç®—è¾“å‡ºrçš„xå€¼å’Œyå€¼
 	r[0] = (lamda * lamda - p[0] - q[0]) % P;  // x
 	r[1] = (lamda * (p[0] - r[0]) - p[1]) % P; // y
 	if (r[1] < 0)
@@ -57,7 +57,7 @@ void ECC_Add(int p[2], int q[2], int r[2])
 
 void ECC_Multi(int p[2], int n, int q[2])
 {
-	// ÀûÓÃ¼Ó·¨º¯Êı£¬forÑ­»·pµãÀÛ¼Ón-1´ÎÊä³ö
+	// åˆ©ç”¨åŠ æ³•å‡½æ•°ï¼Œforå¾ªç¯pç‚¹ç´¯åŠ n-1æ¬¡è¾“å‡º
 	for (int i = 0; i < n - 1; i++)
 	{
 		ECC_Add(p, p, q);
@@ -67,7 +67,7 @@ void ECC_Multi(int p[2], int n, int q[2])
 int main()
 {
 	int point_num = 0;
-	printf("\nÍÖÔ²ÇúÏß y^2=x^3+%dx+%d mod %dÉÏµÄµã£º\n", a, b, P);
+	printf("\næ¤­åœ†æ›²çº¿ y^2=x^3+%dx+%d mod %dä¸Šçš„ç‚¹ï¼š\n", a, b, P);
 	point_num = Get_ECC_Point(a, b, P, Point);
 	for (int i = 0; i < point_num; i++)
 	{
@@ -77,10 +77,10 @@ int main()
 	}
 	int p[2] = {3, 10}, q[2] = {9, 7}, r[2] = {0};
 	ECC_Add(p, q, r);
-	printf("\n¼Ó·¨ÔËËã£ºp=(%d,%d),q=(%d,%d),p+q=(%d,%d)\n", p[0], p[1], q[0], q[1], r[0], r[1]);
+	printf("\nåŠ æ³•è¿ç®—ï¼šp=(%d,%d),q=(%d,%d),p+q=(%d,%d)\n", p[0], p[1], q[0], q[1], r[0], r[1]);
 	int n = 2;
 	ECC_Multi(p, n, r);
-	printf("\n³Ë·¨ÔËËã£ºp=(%d,%d),n=%d,n*p=(%d,%d)\n", p[0], p[1], n, r[0], r[1]);
+	printf("\nä¹˜æ³•è¿ç®—ï¼šp=(%d,%d),n=%d,n*p=(%d,%d)\n", p[0], p[1], n, r[0], r[1]);
 
 	return 0;
 }
