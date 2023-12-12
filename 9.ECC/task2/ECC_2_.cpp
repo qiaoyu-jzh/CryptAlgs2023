@@ -10,6 +10,7 @@ int Point[100][2] = {0};  // 全局变量，满足条件的点的集合
 int a = 1, b = 1, P = 23; // 设置初始参数
 // unit32 Ex_Euclid(unit32 f, unit32 d);
 
+
 int Get_ECC_Point(int a, int b, int p, int (*point)[2]) // 计算符合条件的所有点，存入Point中，并返回点的数目
 {
 	int flag = (4 * a * a * a + 27 * b * b) % p;
